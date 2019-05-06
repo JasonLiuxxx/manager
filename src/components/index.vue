@@ -72,7 +72,7 @@ export default {
     }
   }
   .main {
-    background-color: pink;
+    background-color: cornflowerblue;
   }
 }
 </style>
