@@ -1,42 +1,23 @@
 <template>
   <div>
-    <!-- 面包屑导航 -->
+      <!-- 面包屑导航栏 -->
     <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 搜索框 添加按钮 -->
-    <el-row>
-      <el-col :span="6">
-        <el-input placeholder="请输入内容" class="input-with-select">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-      </el-col>
-      <el-col :span="6">
-        <el-button type="success" plain>添加用户</el-button>
-      </el-col>
-    </el-row>
     <!-- 表格 -->
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="date" label="日期" width="180"></el-table-column>
       <el-table-column prop="name" label="姓名" width="180"></el-table-column>
       <el-table-column prop="address" label="地址"></el-table-column>
     </el-table>
-    <!-- 分页 -->
-    <el-pagination
-      :current-page="1"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="40"
-    ></el-pagination>
   </div>
 </template>
 
 <script>
 export default {
-  naem: "users",
+  naem: "rights",
   data() {
     return {
       tableData: [

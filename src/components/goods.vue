@@ -3,8 +3,9 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+      <el-breadcrumb-item>商品列表</el-breadcrumb-item>
+      <el-breadcrumb-item>分类参数</el-breadcrumb-item>
+      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索框 添加按钮 -->
     <el-row>
@@ -14,7 +15,7 @@
         </el-input>
       </el-col>
       <el-col :span="6">
-        <el-button type="success" plain>添加用户</el-button>
+        <el-button type="primary" plain>添加用户</el-button>
       </el-col>
     </el-row>
     <!-- 表格 -->
@@ -36,7 +37,7 @@
 
 <script>
 export default {
-  naem: "users",
+  naem: "goods",
   data() {
     return {
       tableData: [
