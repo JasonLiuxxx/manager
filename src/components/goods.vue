@@ -71,7 +71,7 @@ export default {
     .breadcrumb{
         height: 45px;
         line-height: 45px;
-        background-color: steelblue;
+        background-color: #d3dce6;
         padding-left: 10px;
     }
 </style>

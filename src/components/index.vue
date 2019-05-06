@@ -56,6 +56,24 @@
               <i class="el-icon-menu"></i>商品分类
             </el-menu-item>
           </el-submenu>
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>订单管理</span>
+            </template>
+            <el-menu-item index="orders">
+              <i class="el-icon-menu"></i>订单列表
+            </el-menu-item>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>数据统计</span>
+            </template>
+            <el-menu-item index="reports">
+              <i class="el-icon-menu"></i>数据报表
+            </el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <!-- 主体 -->
@@ -76,7 +94,7 @@ export default {
 .container {
   height: 100%;
   .header {
-    background-color: thistle;
+    background-color: #b3c0d1;
     height: 60px;
     line-height: 60px;
     text-align: center;
@@ -101,7 +119,8 @@ export default {
     }
   }
   .main {
-    background-color: bisque;
+    background-color: #e9eef3;
+    padding-top: 0;
   }
 }
 </style>
