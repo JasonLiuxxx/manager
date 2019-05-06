@@ -12,7 +12,7 @@ const routes = [
         component:login
     },
     {
-        path:'/index',
+        path:'/',
         component:index
     }
 ]
