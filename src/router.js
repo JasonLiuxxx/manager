@@ -54,9 +54,13 @@ const routes = [
             {
                 path:'reports',
                 component:reports
+            },
+            {
+                path:'',
+                redirect:'users'
             }
         ]
-    }
+    },
 ]
 
 const router = new VueRouter({

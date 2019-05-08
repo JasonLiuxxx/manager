@@ -1,10 +1,48 @@
 import axios from 'axios'
+import Vue from 'vue'
 
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+
+// 添加请求拦截器
+axios.interceptors.request.use(function (config) {
+    // 在发送请求之前做些什么
+    // console.log(config);
+    config.headers.Authorization = sessionStorage.getItem('token')
+    return config
+  })
+
+  // 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+     Vue.prototype.$message.success(response.data.meta.msg);
+     return response
+  });
+
 
 const request = {
    login(params){
        return axios.post('login',params)
+   },
+
+   getUsers(params){
+       return axios.get('users',{
+           params,
+        //    headers:{
+        //     Authorization:sessionStorage.getItem('token')
+        //    }
+       })
+   },
+
+   updateUserStatus(params){
+       return axios.put(`users/${params.id}/state/${params.mg_state}`)
+   },
+
+   deleteUser(id){
+       return axios.delete(`users/${id}`)
+   },
+
+   addUser(params){
+       return axios.post('users',params)
    }
 }
 
