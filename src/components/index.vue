@@ -86,7 +86,12 @@
 
 <script>
 export default {
-  name: "index"
+  name: "index",
+  beforeCreate(){
+    if(!sessionStorage.getItem('token')){
+      this.$router.push('/login')
+    }
+  }
 };
 </script>
 

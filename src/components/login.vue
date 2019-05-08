@@ -54,6 +54,7 @@ export default {
             if (res.data.meta.status === 400) {
               this.$message.error(res.data.meta.msg);
             } else {
+              sessionStorage.setItem('token',res.data.data.token)
               this.$router.push("/");
             }
           });
