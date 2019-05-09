@@ -43,6 +43,21 @@ const request = {
 
    addUser(params){
        return axios.post('users',params)
+   },
+
+   getUserById(id){
+    return axios.get(`users/${id}`)
+   },
+
+   updateUser(params){
+       return axios.put(`users/${params.id}`,{
+        email:params.email,
+        mobile:params.mobile
+       })
+   },
+
+   getRoles(){
+       return axios.get('roles')
    }
 }
 

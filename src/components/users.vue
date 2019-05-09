@@ -9,8 +9,13 @@
     <!-- 搜索框 添加按钮 -->
     <el-row>
       <el-col :span="6">
-        <el-input placeholder="请输入内容" class="input-with-select">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input
+          placeholder="请输入内容"
+          class="input-with-select"
+          @keyup.native.enter="getUsers"
+          v-model="usersData.query"
+        >
+          <el-button slot="append" icon="el-icon-search" @click="getUsers"></el-button>
         </el-input>
       </el-col>
       <el-col :span="6">
@@ -55,13 +60,16 @@
     </el-table>
     <!-- 分页 -->
     <el-pagination
-      :current-page="1"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
+      :current-page="usersData.pagenum"
+      :page-sizes="[2, 4, 6, 8, 10]"
+      :page-size="usersData.pagesize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="40"
+      :total="usersData.totalpage"
+      @size-change="sizeChange"
+      @current-change="currentChange"
     ></el-pagination>
 
+    <!-- 添加框 -->
     <el-dialog title="添加用户" :visible.sync="visible">
       <el-form :model="addUserForm" :rules="addUserRules" ref="addUserForm">
         <el-form-item label="用户名" label-width="120px" prop="username">
@@ -74,7 +82,7 @@
           <el-input v-model="addUserForm.email" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" label-width="120px">
-          <el-input v-model="addUserForm.mobeil" autocomplete="off"></el-input>
+          <el-input v-model="addUserForm.mobile" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -82,6 +90,43 @@
         <el-button type="primary" @click="submitForm('addUserForm')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑框 -->
+    <el-dialog title="编辑用户" :visible.sync="editVisible">
+      <el-form :model="editUserForm" :rules="addUserRules" ref="editUserForm">
+        <el-form-item label="用户名" label-width="120px" prop="username">
+          <el-input v-model="editUserForm.username" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="120px">
+          <el-input v-model="editUserForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" label-width="120px">
+          <el-input v-model="editUserForm.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('editUserForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 分配角色 -->
+    <!-- <el-dialog title="编辑用户" :visible.sync="editVisible">
+      <el-form :model="editUserForm" :rules="addUserRules" ref="editUserForm">
+        <el-form-item label="用户名" label-width="120px" prop="username">
+          <el-input v-model="editUserForm.username" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="120px">
+          <el-input v-model="editUserForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" label-width="120px">
+          <el-input v-model="editUserForm.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('editUserForm')">确 定</el-button>
+      </div>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -94,14 +139,15 @@ export default {
       usersData: {
         query: "",
         pagenum: 1,
-        pagesize: 10
+        pagesize: 10,
+        totalpage: 0
       },
       visible: false,
       addUserForm: {
         username: "",
         password: "",
         email: "",
-        mobeil: ""
+        mobile: ""
       },
       addUserRules: {
         username: [
@@ -112,6 +158,12 @@ export default {
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
         ]
+      },
+      editVisible: false,
+      editUserForm: {
+        username: "",
+        email: "",
+        mobile: ""
       }
     };
   },
@@ -120,11 +172,18 @@ export default {
     getUsers() {
       this.$request.getUsers(this.usersData).then(res => {
         this.tableData = res.data.data.users;
+        this.usersData.totalpage = res.data.data.total;
       });
     },
 
     handleEdit(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
+      this.editVisible = true;
+      // this.editUserForm = row;
+      this.$request.getUserById(row.id).then(res => {
+        // console.log(res);
+        this.editUserForm = res.data.data;
+      });
     },
     handleDelete(index, row) {
       this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -145,16 +204,32 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$request.addUser(this.addUserForm).then(res => {
-            this.getUsers();
-            this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
-            this.visible = false;
-          });
+          if (formName === "editUserForm") {
+            this.$request.updateUser(this.editUserForm).then(res => {
+              this.getUsers();
+              this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
+              this.editVisible = false;
+            });
+          } else {
+            this.$request.addUser(this.addUserForm).then(res => {
+              this.getUsers();
+              this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
+              this.visible = false;
+            });
+          }
         } else {
           this.$message.warning("输入错误,请重新输入");
           return false;
         }
       });
+    },
+    sizeChange(size) {
+      this.usersData.pagesize = size;
+      this.getUsers();
+    },
+    currentChange(num) {
+      this.usersData.pagenum = num;
+      this.getUsers();
     }
   },
   created() {
