@@ -58,6 +58,10 @@ const request = {
 
    getRoles(){
        return axios.get('roles')
+   },
+
+   updateUserRole(id,rid){
+       return axios.put(`users/${id}/role`,{rid})
    }
 }
 

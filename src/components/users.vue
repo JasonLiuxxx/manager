@@ -54,7 +54,7 @@
             @click="handleDelete(scope.$index, scope.row)"
             plain
           ></el-button>
-          <el-button type="success" icon="el-icon-check" size="mini" plain></el-button>
+          <el-button type="success" icon="el-icon-check" size="mini" plain @click="handleCheck(scope.$index, scope.row)" ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,23 +110,28 @@
       </div>
     </el-dialog>
     <!-- 分配角色 -->
-    <!-- <el-dialog title="编辑用户" :visible.sync="editVisible">
-      <el-form :model="editUserForm" :rules="addUserRules" ref="editUserForm">
+    <el-dialog title="分配角色" :visible.sync="roleVisible">
+      <el-form :model="roleForm" :rules="addUserRules" ref="roleForm">
         <el-form-item label="用户名" label-width="120px" prop="username">
-          <el-input v-model="editUserForm.username" autocomplete="off" disabled></el-input>
+          <el-input v-model="roleForm.username" autocomplete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" label-width="120px">
-          <el-input v-model="editUserForm.email" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" label-width="120px">
-          <el-input v-model="editUserForm.mobile" autocomplete="off"></el-input>
+        <el-form-item label="选择分配角色" label-width="120px">
+          <el-select v-model="roleValue" placeholder="请选择">
+            <el-option :value="-1" label="未分配" ></el-option>
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('editUserForm')">确 定</el-button>
+        <el-button @click="roleVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('roleForm')">确 定</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -164,7 +169,11 @@ export default {
         username: "",
         email: "",
         mobile: ""
-      }
+      },
+      roleVisible: false,
+      roleForm: {},
+      roles:[],
+      roleValue:''
     };
   },
 
@@ -210,6 +219,11 @@ export default {
               this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
               this.editVisible = false;
             });
+          } else if(formName === "roleForm"){
+            this.$request.updateUserRole(this.roleForm.id,this.roleValue).then(res=>{
+              // console.log(res);
+              this.roleVisible = false;
+            })
           } else {
             this.$request.addUser(this.addUserForm).then(res => {
               this.getUsers();
@@ -230,6 +244,18 @@ export default {
     currentChange(num) {
       this.usersData.pagenum = num;
       this.getUsers();
+    },
+    handleCheck(index,row){
+      this.roleVisible = true
+      this.$request.getUserById(row.id).then(res=>{
+        // console.log(res.data.dta);
+        this.roleForm = res.data.data
+        this.roleValue = res.data.data.rid
+      })
+      this.$request.getRoles().then(res=>{
+        // console.log(res);
+        this.roles = res.data.data
+      })
     }
   },
   created() {
