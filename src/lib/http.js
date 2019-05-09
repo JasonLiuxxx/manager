@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import router from '../router'
 
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
@@ -14,7 +15,13 @@ axios.interceptors.request.use(function (config) {
   // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
     // 对响应数据做点什么
-     Vue.prototype.$message.success(response.data.meta.msg);
+    if(response.data.meta.status == 200){
+       Vue.prototype.$message.success(response.data.meta.msg); 
+    }else if(response.data.meta.status == 400&&response.data.meta.msg == '无效token'){
+        router.push('/login')
+        sessionStorage.removeItem('token')
+    }
+     
      return response
   });
 
@@ -60,9 +67,33 @@ const request = {
        return axios.get('roles')
    },
 
-   updateUserRole(id,rid){
-       return axios.put(`users/${id}/role`,{rid})
-   }
+   updateUserRole(params){
+       return axios.put(`users/${params.id}/role`,{rid:params.rid})
+   },
+
+   addRole(params){
+    return axios.post('roles',params)
+   },
+
+   deleteRole(id){
+       return axios.delete(`roles/${id}`)
+   },
+
+   getRoleById(id){
+    return axios.get(`roles/${id}`)
+   },
+
+   editRole(params){
+    return axios.put(`roles/${params.id}`,{
+        roleName:params.roleName,
+        roleDesc:params.roleDesc
+    })
+   },
+
+   getListRights(){
+    return axios.get(`rights/list`)
+   },
+
 }
 
 export default {

@@ -5,14 +5,12 @@
       <el-row>
         <el-col :span="4">
           <img class="logo" src="../assets/logo.png" alt>
-          <img class="logo" src="../assets/logo.png" alt>
-          <img class="logo" src="../assets/logo.png" alt>
         </el-col>
         <el-col :span="18">
           <span class="title">鸡你太美后台管理系统</span>
         </el-col>
         <el-col :span="2">
-          <i class="el-icon-switch-button logout">退出</i>
+          <i class="el-icon-switch-button logout" @click="logout" >退出</i>
         </el-col>
       </el-row>
     </el-header>
@@ -91,7 +89,14 @@ export default {
     if(!sessionStorage.getItem('token')){
       this.$router.push('/login')
     }
-  }
+  },
+
+  methods: {
+    logout(){
+      sessionStorage.removeItem('token')
+      this.$router.push('/login')
+    }
+  },
 };
 </script>
 
@@ -104,6 +109,8 @@ export default {
     line-height: 60px;
     text-align: center;
     .logo {
+      display: block;
+      width: 100%;
       height: 60px;
     }
     .title {

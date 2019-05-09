@@ -13,6 +13,7 @@ import params from './components/params.vue'
 import categories from './components/categories.vue'
 import orders from './components/orders.vue'
 import reports from './components/reports.vue'
+import error from './components/error.vue'
 
 const routes = [
     {
@@ -60,6 +61,10 @@ const routes = [
                 redirect:'users'
             }
         ]
+    },
+    {
+        path:'*',//匹配不到时
+        component:error
     },
 ]
 

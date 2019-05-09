@@ -216,11 +216,11 @@ export default {
           if (formName === "editUserForm") {
             this.$request.updateUser(this.editUserForm).then(res => {
               this.getUsers();
-              this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
+              // this.$refs[formName].resetFields(); //请求是异步的 , 所以这两行代码要写在里面
               this.editVisible = false;
             });
           } else if(formName === "roleForm"){
-            this.$request.updateUserRole(this.roleForm.id,this.roleValue).then(res=>{
+            this.$request.updateUserRole({id:this.roleForm.id,rid:this.roleValue}).then(res=>{
               // console.log(res);
               this.roleVisible = false;
             })
