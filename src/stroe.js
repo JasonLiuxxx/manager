@@ -1,3 +1,5 @@
+import vue  from 'vue'
+
 export default {
-    fun
+    vue
 }

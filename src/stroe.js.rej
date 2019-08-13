@@ -1,0 +1,5 @@
+diff a/src/stroe.js b/src/stroe.js	(rejected hunks)
+@@ -0,0 +1,3 @@
++export default {
++    fun
++}
