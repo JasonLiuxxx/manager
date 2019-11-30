@@ -1,5 +1,7 @@
 import vue  from 'vue'
 
 export default {
-    vue
+    vue,
+    aa:'qq',
+    bb:'pp'
 }
